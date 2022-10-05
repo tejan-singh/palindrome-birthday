@@ -1,3 +1,44 @@
+const birthdayInput = document.querySelector("#birthday");
+const checkBtn = document.querySelector(".btn");
+const resultMsg = document.querySelector('#output')
+
+const handleClick = () => {
+  const InputDateValue = birthdayInput.value;
+  if (InputDateValue !== "") {
+    var date = InputDateValue.split("-");
+    var yyyy = date[0];
+    var mm = date[1];
+    var dd = date[2];
+
+    var date = {
+      day: Number(dd),
+      month: Number(mm),
+      year: Number(yyyy),
+    };
+
+    console.log(date);
+
+    var dateStr = numToString(date);
+    var list = checkPalindromeForAllDates(dateStr);
+    var isPalindrome = false;
+
+    for (let i = 0; i < list.length; i++) {
+      if (list[i]) {
+        isPalindrome = true;
+        break;
+      }
+    }
+
+    if (!checkPalindrome) {
+        const [count, nextDate] = getNextPalindromeDate(date);
+        resultMsg.innerText = `The nearest palindrome date is ${nextDate.day}-${nextDate.month}-${nextDate.year}, you missed by ${count} days.`;
+
+      } else {
+        resultMsg.innerText = 'Yay! Your birthday is palindrome!';
+      }
+  }
+};
+
 const checkPalindrome = (date) => {
   var charStr = date.split("");
   var reverseList = charStr.reverse();
@@ -123,6 +164,22 @@ const getNextDate = (date) => {
   };
 };
 
-var date = { day: 1, month: 12, year: 2023 };
+const getNextPalindromeDate = (date) => {
+  var nextDate = getNextDate(date);
+  var ctr = 0;
 
-console.log(getNextDate(date));
+  while (1) {
+    ctr++;
+    var dateStr = numToString(nextDate);
+    var resultList = checkPalindromeForAllDates(dateStr);
+
+    for (let i = 0; i < resultList.length; i++) {
+      if (resultList[i]) {
+        return [ctr, nextDate];
+      }
+    }
+    nextDate = getNextDate(nextDate);
+  }
+};
+
+checkBtn.addEventListener("click", handleClick);
