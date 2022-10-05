@@ -5,37 +5,21 @@ const resultMsg = document.querySelector('#output')
 const handleClick = () => {
   const InputDateValue = birthdayInput.value;
   if (InputDateValue !== "") {
-    var date = InputDateValue.split("-");
-    var yyyy = date[0];
-    var mm = date[1];
-    var dd = date[2];
-
+    var arrayOfDate = InputDateValue.split('-')
+    
     var date = {
-      day: Number(dd),
-      month: Number(mm),
-      year: Number(yyyy),
-    };
-
-    console.log(date);
-
-    var dateStr = numToString(date);
-    var list = checkPalindromeForAllDates(dateStr);
-    var isPalindrome = false;
-
-    for (let i = 0; i < list.length; i++) {
-      if (list[i]) {
-        isPalindrome = true;
-        break;
-      }
+      day: Number(arrayOfDate[2]),
+      month:Number(arrayOfDate[1]),
+      year: Number(arrayOfDate[0])
     }
 
-    if (!checkPalindrome) {
-        const [count, nextDate] = getNextPalindromeDate(date);
-        resultMsg.innerText = `The nearest palindrome date is ${nextDate.day}-${nextDate.month}-${nextDate.year}, you missed by ${count} days.`;
-
-      } else {
-        resultMsg.innerText = 'Yay! Your birthday is palindrome!';
-      }
+    var isPalindrome = checkPalindromeForAllDates(date)
+    if(isPalindrome){
+      resultMsg.innerHTML = 'Your date is a palindrome!'
+    }else{
+      var [ctr, nextDate] = getNextPalindromeDate(date)
+      resultMsg.innerHTML = `The next palindrome date is ${nextDate.day} ${nextDate.month} ${nextDate.year}, you missed it by ${ctr} days` 
+    }
   }
 };
 
@@ -167,19 +151,20 @@ const getNextDate = (date) => {
 const getNextPalindromeDate = (date) => {
   var nextDate = getNextDate(date);
   var ctr = 0;
-
+  
   while (1) {
     ctr++;
-    var dateStr = numToString(nextDate);
-    var resultList = checkPalindromeForAllDates(dateStr);
-
-    for (let i = 0; i < resultList.length; i++) {
-      if (resultList[i]) {
-        return [ctr, nextDate];
-      }
+    var isPalindrome = checkPalindromeForAllDates(nextDate)
+    if(isPalindrome){
+      break;
     }
-    nextDate = getNextDate(nextDate);
+    nextDate = getNextDate(nextDate)
   }
-};
+
+  return [ctr, nextDate]
+}
+const date = {day: 31, month: 12, year: 2020}
+
+console.log(getNextPalindromeDate(date))
 
 checkBtn.addEventListener("click", handleClick);
