@@ -26,12 +26,9 @@ const handleClick = () => {
 const checkPalindrome = (date) => {
   var charStr = date.split("");
   var reverseList = charStr.reverse();
-  var reverseStr = reverseList.join("");
+  var reverseStr = reverseList.join("");  
 
-  if (date === reverseStr) {
-    return true;
-  }
-  return false;
+  return date === reverseStr
 };
 
 const numToString = (date) => {
@@ -82,16 +79,17 @@ const getDateVariations = (date) => {
 
 const checkPalindromeForAllDates = (date) => {
   const allDates = getDateVariations(date);
-  for (date of allDates) {
-    if (checkPalindrome(date)) {
-      return true;
+  var flag = false
+  for (var i = 0; i < allDates.length; i++ ){
+    if(checkPalindrome(allDates[i])){
+      flag = true
+      break
     }
   }
-  return false;
+  return flag;
 };
 
 // check for next palindrome
-const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 const checkLeapYear = (year) => {
   if (year % 400 === 0) {
@@ -107,47 +105,45 @@ const checkLeapYear = (year) => {
   return false;
 };
 
-const getNextDate = (date) => {
+function getNextDate(date) {
   var day = date.day + 1;
   var month = date.month;
   var year = date.year;
 
-  if (month !== 2) {
-    if (day > daysInMonth[month - 1]) {
-      return { day: 1, month: 1, year: year + 1 };
-    }
-
-    if (month >= 12) {
-      return { day: 1, month: 1, year: year + 1 };
-    }
-    return { day: day, month: month, year: year };
-  }
+  var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   if (month === 2) {
     if (checkLeapYear(year)) {
-      // means there are 29 days in feb
-      // increment day till 29
       if (day > 29) {
-        return { day: 1, month: 3, year: year };
+        day = 1;
+        month = 3;
       }
-
-      return { day: day, month: month, year: year };
     }
-    //not leap year so increse day till 28
-    if (day > 28) {
-      return { day: 1, month: 3, year: year };
+    else {
+      if (day > 28) {
+        day = 1;
+        month = 3;
+      }
     }
+  }
+  else {
+    if (day > daysInMonth[month - 1]) {
+      day = 1;
+      month++;
+    }
+  }
 
-    return { day: day, month: month, year: year };
+  if (month > 12) {
+    month = 1;
+    year++;
   }
 
   return {
     day: day,
     month: month,
-    year: year,
-  };
-};
-
+    year: year
+  }
+}
 const getNextPalindromeDate = (date) => {
   var nextDate = getNextDate(date);
   var ctr = 0;
@@ -163,8 +159,5 @@ const getNextPalindromeDate = (date) => {
 
   return [ctr, nextDate]
 }
-const date = {day: 31, month: 12, year: 2020}
-
-console.log(getNextPalindromeDate(date))
 
 checkBtn.addEventListener("click", handleClick);
