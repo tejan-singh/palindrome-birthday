@@ -65,6 +65,64 @@ const checkPalindromeForAllDates = (date) => {
   return false;
 };
 
-var date = { day: 10, month: 9, year: 2020 };
+// check for next palindrome
+const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-console.log(checkPalindromeForAllDates(date));
+const checkLeapYear = (year) => {
+  if (year % 400 === 0) {
+    return true;
+  }
+  if (year % 100 === 0) {
+    return true;
+  }
+  if (year % 4 === 0) {
+    return true;
+  }
+
+  return false;
+};
+
+const getNextDate = (date) => {
+  var day = date.day + 1;
+  var month = date.month;
+  var year = date.year;
+
+  if (month !== 2) {
+    if (day > daysInMonth[month - 1]) {
+      return { day: 1, month: 1, year: year + 1 };
+    }
+
+    if (month >= 12) {
+      return { day: 1, month: 1, year: year + 1 };
+    }
+    return { day: day, month: month, year: year };
+  }
+
+  if (month === 2) {
+    if (checkLeapYear(year)) {
+      // means there are 29 days in feb
+      // increment day till 29
+      if (day > 29) {
+        return { day: 1, month: 3, year: year };
+      }
+
+      return { day: day, month: month, year: year };
+    }
+    //not leap year so increse day till 28
+    if (day > 28) {
+      return { day: 1, month: 3, year: year };
+    }
+
+    return { day: day, month: month, year: year };
+  }
+
+  return {
+    day: day,
+    month: month,
+    year: year,
+  };
+};
+
+var date = { day: 1, month: 12, year: 2023 };
+
+console.log(getNextDate(date));
